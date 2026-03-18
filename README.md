@@ -1,59 +1,99 @@
-# Frontend
+# TaskFlow — Frontend
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.0.4.
+Application frontend **TaskFlow** développée avec **Angular 21**.
 
-## Development server
+> Ce dépôt correspond à la partie *frontend*.
 
-To start a local development server, run:
+## Sommaire
+
+- [Pré-requis](#pré-requis)
+- [Installation](#installation)
+- [Démarrer en développement](#démarrer-en-développement)
+- [Configuration de l’API](#configuration-de-lapi)
+- [Scripts disponibles](#scripts-disponibles)
+- [Structure du projet](#structure-du-projet)
+- [Identité visuelle (dark mode)](#identité-visuelle-dark-mode)
+
+## Pré-requis
+
+- **Node.js** (idéalement une version récente LTS)
+- **npm** (le projet indique `npm@10.2.5` dans `package.json`)
+
+Si vous n’avez pas Angular CLI en global, pas de souci : les commandes `ng` passent via les dépendances du projet.
+
+## Installation
+
+Depuis la racine du projet :
 
 ```bash
-ng serve
+npm install
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## Démarrer en développement
 
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+Lancer le serveur de dev :
 
 ```bash
+npm start
+```
+
+Puis ouvrir :
+
+- http://localhost:4200/
+
+Le rechargement est automatique lors des modifications de fichiers.
+
+## Configuration de l’API
+
+Par défaut, le frontend appelle l’API sur :
+
+- `http://localhost:3000`
+
+Cette valeur est définie dans :
+
+- `src/environments/environment.ts` → `environment.apiUrl`
+
+> Adaptez cette URL en fonction de l’adresse/port de votre backend.
+
+## Scripts disponibles
+
+Les scripts principaux (voir `package.json`) :
+
+- `npm start` : lance le serveur de développement (`ng serve`)
+- `npm run build` : build de production
+- `npm run watch` : build en mode watch (configuration *development*)
+- `npm test` : exécute les tests unitaires (builder Angular + Vitest)
+
+## Structure du projet
+
+Points d’entrée et répertoires utiles :
+
+- `src/main.ts` : bootstrap Angular
+- `src/app/core` : éléments transverses (services, stores, interceptors, guards, modèles…)
+- `src/app/features` : modules/pages fonctionnels (auth, dashboard, tasks, categories…)
+- `src/app/shared` : composants partagés (navbar, sidebar, toasts…)
+- `public/` : assets statiques
+
+## Identité visuelle (dark mode)
+
+Une référence de palette / règles UI est disponible ici :
+
+- `DARK_MODE_IDENTITY.md`
+
+---
+
+## À propos d’Angular CLI
+
+Le projet a été généré avec [Angular CLI](https://github.com/angular/angular-cli) (version `21.0.4`).
+
+Commandes utiles :
+
+```bash
+# Générer un composant
 ng generate component component-name
-```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
+# Liste des schematics
 ng generate --help
 ```
 
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Documentation : https://angular.dev/tools/cli
