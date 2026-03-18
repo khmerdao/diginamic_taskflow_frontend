@@ -1,0 +1,15 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark border-bottom">
+  <div class="container-fluid">
+    <a class="navbar-brand fw-semibold" [routerLink]="['/dashboard']">TaskFlow</a>
+
+    <div class="d-flex align-items-center gap-2">
+      @if (user(); as u) {
+        <span class="text-white-50 small">{{ u.username }} ({{ u.email }})</span>
+      }
+
+      <button class="btn btn-outline-light btn-sm" type="button" (click)="logout()">
+        Déconnexion
+      </button>
+    </div>
+  </div>
+</nav>

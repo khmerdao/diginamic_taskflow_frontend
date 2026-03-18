@@ -1,0 +1,114 @@
+<div class="d-flex align-items-center justify-content-between mb-3">
+  <div>
+    <h1 class="h4 mb-0">Détail de la tâche</h1>
+    @if (task()) {
+      <div class="text-muted">#{{ task()?.id }}</div>
+    }
+  </div>
+
+  <div class="d-flex gap-2">
+    <a class="btn btn-outline-secondary" routerLink="/tasks">Retour</a>
+    @if (task()) {
+      <a class="btn btn-primary" [routerLink]="['/tasks', task()?.id, 'edit']">Éditer</a>
+      <button class="btn btn-outline-danger" type="button" (click)="deleteTask()" [disabled]="deleting">
+        @if (deleting()) {
+          <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
+        }
+        Supprimer
+      </button>
+    }
+  </div>
+</div>
+
+@if (errorMessage()) {
+  <div class="alert alert-danger">{{ errorMessage() }}</div>
+}
+
+@if (loading()) {
+  <div class="d-flex align-items-center gap-2">
+    <div class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></div>
+    <span class="text-muted">Chargement…</span>
+  </div>
+}
+
+@if (!loading() && task()) {
+<div class="card shadow-sm">
+  <div class="card-body p-4">
+    <div class="d-flex flex-wrap align-items-start justify-content-between gap-3">
+      <div>
+        <h2 class="h5 mb-1">{{ task()?.title }}</h2>
+        @if (task()?.description) {
+          <p class="text-muted mb-0">{{ task()?.description }}</p>
+        } @else {
+          <p class="text-muted mb-0">(Pas de description)</p>
+        }
+      </div>
+
+      <div class="d-flex gap-2">
+        <span
+          class="badge"
+          [ngClass]="{
+            'text-bg-secondary': task()?.status === 'todo',
+            'text-bg-info': task()?.status === 'in_progress',
+            'text-bg-success': task()?.status === 'done',
+            'text-bg-dark': task()?.status === 'cancelled'
+          }"
+        >
+          {{ task()?.status }}
+        </span>
+
+        <span
+          class="badge"
+          [ngClass]="{
+            'text-bg-secondary': task()?.priority === 'low',
+            'text-bg-primary': task()?.priority === 'medium',
+            'text-bg-warning': task()?.priority === 'high',
+            'text-bg-danger': task()?.priority === 'urgent'
+          }"
+        >
+          {{ task()?.priority }}
+        </span>
+      </div>
+    </div>
+
+    <div class="d-flex flex-wrap gap-2 mt-3">
+      <button class="btn btn-sm btn-outline-secondary" type="button" (click)="changeStatus('todo')">TODO</button>
+      <button class="btn btn-sm btn-outline-info" type="button" (click)="changeStatus('in_progress')">IN PROGRESS</button>
+      <button class="btn btn-sm btn-outline-success" type="button" (click)="changeStatus('done')">DONE</button>
+      <button class="btn btn-sm btn-outline-dark" type="button" (click)="changeStatus('cancelled')">CANCELLED</button>
+    </div>
+
+    <hr class="my-4" />
+
+    <div class="row g-3">
+      <div class="col-12 col-md-6">
+        <div class="text-muted small">Échéance</div>
+        <div class="fw-semibold">
+          @if (task()?.due_date) {
+            <span>{{ task()?.due_date | date: 'dd/MM/yyyy' }}</span>
+          } @else {
+            <span class="text-muted">—</span>
+          }
+        </div>
+      </div>
+
+      <div class="col-12 col-md-6">
+        <div class="text-muted small">Catégorie</div>
+        <div class="fw-semibold">
+          {{ getCategoryLabel(task()!) }}
+        </div>
+      </div>
+
+      <div class="col-12 col-md-6">
+        <div class="text-muted small">Créée le</div>
+        <div class="fw-semibold">{{ task()?.created_at | date: 'dd/MM/yyyy HH:mm' }}</div>
+      </div>
+
+      <div class="col-12 col-md-6">
+        <div class="text-muted small">Modifiée le</div>
+        <div class="fw-semibold">{{ task()?.updated_at | date: 'dd/MM/yyyy HH:mm' }}</div>
+      </div>
+    </div>
+  </div>
+</div>
+}

@@ -1,0 +1,91 @@
+<div class="d-flex align-items-center justify-content-between mb-3">
+  <div>
+    <h1 class="h4 mb-0">Catégories</h1>
+    <div class="text-muted">Organise tes tâches par catégorie</div>
+  </div>
+
+  <a class="btn btn-primary" routerLink="/categories/new">+ Nouvelle catégorie</a>
+</div>
+
+<div class="card shadow-sm">
+  <div class="card-body p-0">
+    @if (loading()) {
+      <div class="p-3 border-bottom">
+        <div class="d-flex align-items-center gap-2">
+          <div class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></div>
+          <span class="text-muted">Chargement…</span>
+        </div>
+      </div>
+    }
+
+    <div class="table-responsive">
+      <table class="table table-hover align-middle mb-0">
+        <thead class="table-light">
+          <tr>
+            <th>Nom</th>
+            <th>Couleur</th>
+            <th class="text-end">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (c of categories(); track c.id) {
+          <tr>
+            @if (editingId !== c.id) {
+              <td class="fw-semibold">{{ c.name }}</td>
+              <td>
+                <span class="badge" [style.background]="c.color" style="color: #fff">
+                  {{ c.color }}
+                </span>
+              </td>
+              <td class="text-end">
+                <div class="btn-group btn-group-sm" role="group">
+                  <button class="btn btn-outline-primary" type="button" (click)="startEdit(c)">Modification rapide</button>
+                  <a class="btn btn-outline-secondary" [routerLink]="['/categories', c.id, 'edit']">Modifier</a>
+                  <button class="btn btn-outline-danger" type="button" (click)="deleteCategory(c.id)">
+                    Supprimer
+                  </button>
+                </div>
+              </td>
+            } @else {
+              <td>
+                <input class="form-control form-control-sm" [formControl]="editForm.controls.name" />
+              </td>
+              <td>
+                <div class="d-flex align-items-center gap-2">
+                  <input
+                    class="form-control form-control-color form-control-sm"
+                    type="color"
+                    [formControl]="editForm.controls.color"
+                  />
+                  <span class="badge" [style.background]="editForm.value.color" style="color: #fff">
+                    {{ editForm.value.color }}
+                  </span>
+                </div>
+              </td>
+              <td class="text-end">
+                <div class="btn-group btn-group-sm" role="group">
+                  <button class="btn btn-success" type="button" (click)="saveEdit()" [disabled]="saving || editForm.invalid">
+                    @if (saving) {
+                      <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
+                    }
+                    Enregistrer
+                  </button>
+                  <button class="btn btn-outline-secondary" type="button" (click)="cancelEdit()" [disabled]="saving">
+                    Annuler
+                  </button>
+                </div>
+              </td>
+            }
+          </tr>
+          }
+
+          @if (!loading() && categories().length === 0) {
+            <tr>
+              <td colspan="3" class="text-center text-muted py-4">Aucune catégorie.</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,15 @@
+<div class="d-flex flex-column" style="min-height: 100vh">
+  <app-navbar />
+
+  <div class="container-fluid flex-grow-1">
+    <div class="row flex-grow-1" style="min-height: calc(100vh - 56px)">
+      <div class="col-12 col-md-3 col-lg-2 p-0">
+        <app-sidebar />
+      </div>
+
+      <main class="col-12 col-md-9 col-lg-10 py-4">
+        <router-outlet />
+      </main>
+    </div>
+  </div>
+</div>

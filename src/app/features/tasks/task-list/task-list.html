@@ -1,0 +1,163 @@
+<div class="d-flex align-items-center justify-content-between mb-3">
+  <div>
+    <h1 class="h4 mb-0">Tâches</h1>
+    <div class="text-muted">Gère tes tâches et leur avancement</div>
+  </div>
+
+  <a class="btn btn-primary" routerLink="/tasks/new">+ Nouvelle tâche</a>
+</div>
+
+<form [formGroup]="filtersForm" (ngSubmit)="loadTasks()" class="card shadow-sm mb-3">
+  <div class="card-body">
+    <div class="row g-2 align-items-end">
+      <div class="col-12 col-md-3">
+        <label class="form-label">Statut</label>
+        <select class="form-select" formControlName="status">
+          <option value="">Tous</option>
+          <option value="todo">todo</option>
+          <option value="in_progress">in_progress</option>
+          <option value="done">done</option>
+          <option value="cancelled">cancelled</option>
+        </select>
+      </div>
+
+      <div class="col-12 col-md-3">
+        <label class="form-label">Priorité</label>
+        <select class="form-select" formControlName="priority">
+          <option value="">Toutes</option>
+          <option value="low">low</option>
+          <option value="medium">medium</option>
+          <option value="high">high</option>
+          <option value="urgent">urgent</option>
+        </select>
+      </div>
+
+      <div class="col-12 col-md-3">
+        <label class="form-label">Catégorie</label>
+        <select class="form-select" formControlName="category">
+          <option value="">Toutes</option>
+          @for (c of categories(); track c.id) {
+            <option [value]="c.id">{{ c.name }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="col-12 col-md-3">
+        <label class="form-label">Recherche</label>
+        <input class="form-control" formControlName="q" placeholder="Titre / description" />
+      </div>
+
+      <div class="col-12 d-flex gap-2 justify-content-end mt-2">
+        <button class="btn btn-outline-secondary" type="button" (click)="clearFilters()">Réinitialiser</button>
+        <button class="btn btn-primary" type="submit">Filtrer</button>
+      </div>
+    </div>
+  </div>
+</form>
+
+<div class="card shadow-sm">
+  <div class="card-body p-0">
+    @if (loading()) {
+      <div class="p-3 border-bottom">
+        <div class="d-flex align-items-center gap-2">
+          <div class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></div>
+          <span class="text-muted">Chargement…</span>
+        </div>
+      </div>
+    }
+
+    <div class="table-responsive">
+      <table class="table table-hover align-middle mb-0">
+        <thead class="table-light">
+          <tr>
+            <th>Titre</th>
+            <th>Statut</th>
+            <th>Priorité</th>
+            <th>Échéance</th>
+            <th>Catégorie</th>
+            <th class="text-end">Actions</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          @for (task of tasks(); track task.id) {
+            <tr>
+              <td class="fw-semibold">
+                <a [routerLink]="['/tasks', task.id]">{{ task.title }}</a>
+                <div class="text-muted small text-truncate" style="max-width: 520px">
+                  {{ task.description }}
+                </div>
+              </td>
+
+              <td>
+                <span
+                  class="badge"
+                  [ngClass]="{
+                    'text-bg-secondary': task.status === 'todo',
+                    'text-bg-info': task.status === 'in_progress',
+                    'text-bg-success': task.status === 'done',
+                    'text-bg-dark': task.status === 'cancelled'
+                  }"
+                >
+                  {{ task.status }}
+                </span>
+              </td>
+
+              <td>
+                <span
+                  class="badge"
+                  [ngClass]="{
+                    'text-bg-secondary': task.priority === 'low',
+                    'text-bg-primary': task.priority === 'medium',
+                    'text-bg-warning': task.priority === 'high',
+                    'text-bg-danger': task.priority === 'urgent'
+                  }"
+                >
+                  {{ task.priority }}
+                </span>
+              </td>
+
+              <td>
+                @if (!task.due_date) {
+                  <span class="text-muted">—</span>
+                } @else {
+                  <span>{{ task.due_date | date: 'dd/MM/yyyy' }}</span>
+                }
+              </td>
+
+              <td>
+                @if (isCategory(task.category)) {
+                  <span>{{ task.category.name }}</span>
+                } @else {
+                  <span class="text-muted">—</span>
+                }
+              </td>
+
+              <td class="text-end">
+                <div class="btn-group btn-group-sm" role="group">
+                  <a class="btn btn-outline-secondary" [routerLink]="['/tasks', task.id, 'edit']">Éditer</a>
+
+                  <button class="btn btn-outline-success" type="button" (click)="changeStatus(task.id, 'done')">
+                    Done
+                  </button>
+
+                  <button class="btn btn-outline-danger" type="button" (click)="deleteTask(task.id)">
+                    Supprimer
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+
+          @if (!loading() && tasks().length === 0) {
+            <tr>
+              <td colspan="5" class="text-center text-muted py-4">
+                Aucune tâche. Clique sur “Nouvelle tâche” pour commencer.
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

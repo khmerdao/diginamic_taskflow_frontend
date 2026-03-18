@@ -1,0 +1,55 @@
+<div class="d-flex align-items-center justify-content-between mb-3">
+  <div>
+    <h1 class="h4 mb-0">{{ categoryId ? 'Éditer la catégorie' : 'Nouvelle catégorie' }}</h1>
+    <div class="text-muted">Nom + couleur</div>
+  </div>
+
+  <a class="btn btn-outline-secondary" routerLink="/categories">Retour</a>
+</div>
+
+<div class="card shadow-sm">
+  <div class="card-body p-4">
+    @if (errorMessage) {
+      <div class="alert alert-danger">{{ errorMessage }}</div>
+    }
+
+    @if (loading) {
+      <div class="d-flex align-items-center gap-2 mb-3">
+        <div class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></div>
+        <span class="text-muted">Chargement…</span>
+      </div>
+    }
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="row g-3">
+      <div class="col-12 col-md-6">
+        <label class="form-label">Nom</label>
+        <input class="form-control" formControlName="name" placeholder="Ex: Travail" />
+        @if (form.controls.name.touched && form.controls.name.invalid) {
+          <div class="invalid-feedback d-block">Le nom est requis.</div>
+        }
+      </div>
+
+      <div class="col-12 col-md-6">
+        <label class="form-label">Couleur</label>
+        <div class="input-group">
+          <input class="form-control form-control-color" type="color" formControlName="color" />
+          <input class="form-control" type="text" formControlName="color" />
+        </div>
+        <div class="form-text">Aperçu :</div>
+        <span class="badge" [style.background]="form.value.color" style="color: #fff">
+          {{ form.value.color }}
+        </span>
+      </div>
+
+      <div class="col-12 d-flex gap-2 justify-content-end mt-2">
+        <a class="btn btn-outline-secondary" routerLink="/categories">Annuler</a>
+        <button class="btn btn-primary" type="submit" [disabled]="saving || form.invalid">
+          @if (saving) {
+            <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
+          }
+          Enregistrer
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

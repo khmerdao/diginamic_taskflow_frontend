@@ -1,0 +1,61 @@
+<div class="d-flex align-items-center justify-content-between mb-3">
+  <div>
+    <h1 class="h4 mb-0">Dashboard</h1>
+    <div class="text-muted">Aperçu rapide de tes tâches</div>
+  </div>
+
+  <a class="btn btn-primary" routerLink="/tasks/new">+ Nouvelle tâche</a>
+</div>
+
+<div class="row g-3">
+  <div class="col-12 col-md-6 col-xl-3">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <div class="text-muted small">Total</div>
+        <div class="fs-3 fw-semibold">{{ stats()?.total ?? '—' }}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12 col-md-6 col-xl-3">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <div class="text-muted small">À faire</div>
+        <div class="fs-3 fw-semibold">{{ stats()?.todo ?? '—' }}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12 col-md-6 col-xl-3">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <div class="text-muted small">En cours</div>
+        <div class="fs-3 fw-semibold">{{ stats()?.in_progress ?? '—' }}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12 col-md-6 col-xl-3">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <div class="text-muted small">Terminées</div>
+        <div class="fs-3 fw-semibold">{{ stats()?.done ?? '—' }}</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+@if (loading()) {
+  <div class="mt-4">
+    <div class="d-flex align-items-center gap-2">
+      <div class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></div>
+      <div class="text-muted">Chargement…</div>
+    </div>
+  </div>
+}
+
+@if (!loading() && !stats()) {
+  <div class="alert alert-info mt-4">
+    Aucune statistique disponible (API non accessible ou réponse vide).
+  </div>
+}
