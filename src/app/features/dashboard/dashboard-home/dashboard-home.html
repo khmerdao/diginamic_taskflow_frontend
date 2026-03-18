@@ -7,43 +7,187 @@
   <a class="btn btn-primary" routerLink="/tasks/new">+ Nouvelle tâche</a>
 </div>
 
-<div class="row g-3">
-  <div class="col-12 col-md-6 col-xl-3">
-    <div class="card shadow-sm">
-      <div class="card-body">
-        <div class="text-muted small">Total</div>
-        <div class="fs-3 fw-semibold">{{ stats()?.total ?? '—' }}</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="col-12 col-md-6 col-xl-3">
-    <div class="card shadow-sm">
-      <div class="card-body">
-        <div class="text-muted small">À faire</div>
-        <div class="fs-3 fw-semibold">{{ stats()?.todo ?? '—' }}</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="col-12 col-md-6 col-xl-3">
-    <div class="card shadow-sm">
-      <div class="card-body">
-        <div class="text-muted small">En cours</div>
-        <div class="fs-3 fw-semibold">{{ stats()?.in_progress ?? '—' }}</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="col-12 col-md-6 col-xl-3">
-    <div class="card shadow-sm">
-      <div class="card-body">
-        <div class="text-muted small">Terminées</div>
-        <div class="fs-3 fw-semibold">{{ stats()?.done ?? '—' }}</div>
-      </div>
-    </div>
-  </div>
+<div class="d-flex align-items-center justify-content-between mt-4 mb-2">
+  <h2 class="h5 mb-0">Kanban</h2>
+  <a class="btn btn-sm btn-outline-secondary" routerLink="/tasks">Voir toutes les tâches</a>
 </div>
+
+@if (tasksLoading()) {
+  <div class="mt-2">
+    <div class="d-flex align-items-center gap-2">
+      <div class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></div>
+      <div class="text-muted">Chargement des tâches…</div>
+    </div>
+  </div>
+}
+
+@if (!tasksLoading() && tasksError()) {
+  <div class="alert alert-danger mt-2">{{ tasksError() }}</div>
+}
+
+@if (!tasksLoading() && !tasksError()) {
+  <div class="row g-3">
+    <div class="col-12 col-md-6 col-xl-3">
+      <div class="card shadow-sm h-100">
+        <div class="card-header d-flex align-items-center justify-content-between">
+          <span class="fw-semibold">A FAIRE</span>
+          <span class="badge text-bg-secondary">{{ todoList.length }}</span>
+        </div>
+        <div class="card-body p-2 kanban-column">
+          <div
+            class="list-group list-group-flush"
+            cdkDropList
+            id="todoList"
+            [cdkDropListData]="todoList"
+            [cdkDropListConnectedTo]="['todoList', 'inProgressList', 'doneList', 'cancelledList']"
+            (cdkDropListDropped)="onDrop($event, 'todo')"
+          >
+            @if (todoList.length === 0) {
+              <div class="text-muted small p-2">Dépose une tâche ici</div>
+            }
+            @for (task of todoList; track task.id) {
+              <a
+                class="list-group-item list-group-item-action py-2"
+                [routerLink]="['/tasks', task.id]"
+                cdkDrag
+                [cdkDragData]="task"
+              >
+                <div class="fw-semibold small">{{ task.title }}</div>
+                <div class="text-muted small text-truncate">{{ task.description }}</div>
+                <div class="mt-1 d-flex flex-wrap gap-1">
+                  <span class="badge text-bg-secondary">{{ task.priority }}</span>
+                  @if (task.due_date) {
+                    <span class="badge text-bg-light">{{ task.due_date | date: 'dd/MM' }}</span>
+                  }
+                </div>
+              </a>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-md-6 col-xl-3">
+      <div class="card shadow-sm h-100">
+        <div class="card-header d-flex align-items-center justify-content-between">
+          <span class="fw-semibold">EN COURS</span>
+          <span class="badge text-bg-info">{{ inProgressList.length }}</span>
+        </div>
+        <div class="card-body p-2 kanban-column">
+          <div
+            class="list-group list-group-flush"
+            cdkDropList
+            id="inProgressList"
+            [cdkDropListData]="inProgressList"
+            [cdkDropListConnectedTo]="['todoList', 'inProgressList', 'doneList', 'cancelledList']"
+            (cdkDropListDropped)="onDrop($event, 'in_progress')"
+          >
+            @if (inProgressList.length === 0) {
+              <div class="text-muted small p-2">Dépose une tâche ici</div>
+            }
+            @for (task of inProgressList; track task.id) {
+              <a
+                class="list-group-item list-group-item-action py-2"
+                [routerLink]="['/tasks', task.id]"
+                cdkDrag
+                [cdkDragData]="task"
+              >
+                <div class="fw-semibold small">{{ task.title }}</div>
+                <div class="text-muted small text-truncate">{{ task.description }}</div>
+                <div class="mt-1 d-flex flex-wrap gap-1">
+                  <span class="badge text-bg-secondary">{{ task.priority }}</span>
+                  @if (task.due_date) {
+                    <span class="badge text-bg-light">{{ task.due_date | date: 'dd/MM' }}</span>
+                  }
+                </div>
+              </a>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-md-6 col-xl-3">
+      <div class="card shadow-sm h-100">
+        <div class="card-header d-flex align-items-center justify-content-between">
+          <span class="fw-semibold">TERMINÉES</span>
+          <span class="badge text-bg-success">{{ doneList.length }}</span>
+        </div>
+        <div class="card-body p-2 kanban-column">
+          <div
+            class="list-group list-group-flush"
+            cdkDropList
+            id="doneList"
+            [cdkDropListData]="doneList"
+            [cdkDropListConnectedTo]="['todoList', 'inProgressList', 'doneList', 'cancelledList']"
+            (cdkDropListDropped)="onDrop($event, 'done')"
+          >
+            @if (doneList.length === 0) {
+              <div class="text-muted small p-2">Dépose une tâche ici</div>
+            }
+            @for (task of doneList; track task.id) {
+              <a
+                class="list-group-item list-group-item-action py-2"
+                [routerLink]="['/tasks', task.id]"
+                cdkDrag
+                [cdkDragData]="task"
+              >
+                <div class="fw-semibold small">{{ task.title }}</div>
+                <div class="text-muted small text-truncate">{{ task.description }}</div>
+                <div class="mt-1 d-flex flex-wrap gap-1">
+                  <span class="badge text-bg-secondary">{{ task.priority }}</span>
+                  @if (task.due_date) {
+                    <span class="badge text-bg-light">{{ task.due_date | date: 'dd/MM' }}</span>
+                  }
+                </div>
+              </a>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-md-6 col-xl-3">
+      <div class="card shadow-sm h-100">
+        <div class="card-header d-flex align-items-center justify-content-between">
+          <span class="fw-semibold">ANNULÉES</span>
+          <span class="badge text-bg-dark">{{ cancelledList.length }}</span>
+        </div>
+        <div class="card-body p-2 kanban-column">
+          <div
+            class="list-group list-group-flush"
+            cdkDropList
+            id="cancelledList"
+            [cdkDropListData]="cancelledList"
+            [cdkDropListConnectedTo]="['todoList', 'inProgressList', 'doneList', 'cancelledList']"
+            (cdkDropListDropped)="onDrop($event, 'cancelled')"
+          >
+            @if (cancelledList.length === 0) {
+              <div class="text-muted small p-2">Dépose une tâche ici</div>
+            }
+            @for (task of cancelledList; track task.id) {
+              <a
+                class="list-group-item list-group-item-action py-2"
+                [routerLink]="['/tasks', task.id]"
+                cdkDrag
+                [cdkDragData]="task"
+              >
+                <div class="fw-semibold small">{{ task.title }}</div>
+                <div class="text-muted small text-truncate">{{ task.description }}</div>
+                <div class="mt-1 d-flex flex-wrap gap-1">
+                  <span class="badge text-bg-secondary">{{ task.priority }}</span>
+                  @if (task.due_date) {
+                    <span class="badge text-bg-light">{{ task.due_date | date: 'dd/MM' }}</span>
+                  }
+                </div>
+              </a>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+}
 
 @if (loading()) {
   <div class="mt-4">
