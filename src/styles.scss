@@ -1,14 +1,7 @@
 
-// Include theming for Angular Material with `mat.theme()`.
-// This Sass mixin will define CSS variables that are used for styling Angular Material
-// components according to the Material 3 design spec.
-// Learn more about theming and how to use it for your application's
-// custom components at https://material.angular.dev/guide/theming
 @use '@angular/material' as mat;
 
-// Bootstrap 5 (global)
-// Note: we only import the CSS framework here. Bootstrap JS is not required for the
-// current UI (no dropdown/collapse needing JS).
+// Bootstrap 5
 @import 'bootstrap/scss/bootstrap';
 
 html {
@@ -23,30 +16,295 @@ html {
   ));
 }
 
+/**
+ * TaskFlow — Dark mode visual identity 
+ *
+ * Goals:
+ */
+
+:root {
+  /* --- Core palette (requested) --- */
+  --tf-bg-0: #0f172a; /* deep navy */
+  --tf-bg-1: #111827; /* dark blue-gray */
+  --tf-surface-1: #1f2937; /* surfaces / cards */
+  --tf-surface-2: #1e293b; /* slightly lighter surface */
+
+  --tf-primary-500: #3b82f6;
+  --tf-primary-400: #60a5fa;
+
+  --tf-purple-500: #8b5cf6;
+  --tf-teal-500: #14b8a6;
+  --tf-amber-500: #f59e0b;
+
+  --tf-success-500: #22c55e;
+  --tf-warning-500: #f59e0b;
+  --tf-danger-500: #ef4444;
+
+  /* --- Extended neutrals (for hierarchy) --- */
+  --tf-text-0: #e5e7eb; /* main text */
+  --tf-text-1: #cbd5e1; /* secondary */
+  --tf-text-2: #94a3b8; /* muted */
+  --tf-text-3: #64748b; /* subtle */
+
+  --tf-border: rgba(148, 163, 184, 0.16);
+  --tf-border-strong: rgba(148, 163, 184, 0.24);
+
+  --tf-shadow-1: 0 1px 0 rgba(2, 6, 23, 0.35), 0 10px 30px rgba(2, 6, 23, 0.45);
+  --tf-shadow-2: 0 1px 0 rgba(2, 6, 23, 0.4), 0 18px 50px rgba(2, 6, 23, 0.55);
+
+  --tf-radius-sm: 8px;
+  --tf-radius-md: 10px;
+  --tf-radius-lg: 12px;
+
+  /* Soft futuristic glow (used only on focus/active/highlights) */
+  --tf-glow-primary: 0 0 0 3px rgba(96, 165, 250, 0.22), 0 0 26px rgba(59, 130, 246, 0.18);
+  --tf-glow-success: 0 0 0 3px rgba(34, 197, 94, 0.18), 0 0 26px rgba(34, 197, 94, 0.14);
+  --tf-glow-warning: 0 0 0 3px rgba(245, 158, 11, 0.18), 0 0 26px rgba(245, 158, 11, 0.14);
+  --tf-glow-danger: 0 0 0 3px rgba(239, 68, 68, 0.18), 0 0 26px rgba(239, 68, 68, 0.14);
+}
+
+html,
 body {
-  // Default the application to a light color theme. This can be changed to
-  // `dark` to enable the dark color theme, or to `light dark` to defer to the
-  // user's system settings.
-  color-scheme: light;
-
-  // Set a default background, font and text colors for the application using
-  // Angular Material's system-level CSS variables. Learn more about these
-  // variables at https://material.angular.dev/guide/system-variables
-  background-color: var(--mat-sys-surface);
-  color: var(--mat-sys-on-surface);
-  font: var(--mat-sys-body-medium);
-
-  // Reset the user agent margin.
-  margin: 0;
   height: 100%;
 }
 
-// Small app-level defaults
 body {
-  background-color: #f8f9fa; // Bootstrap $gray-100
+  color-scheme: dark;
+  margin: 0;
+
+  background:
+    radial-gradient(900px 450px at 20% -10%, rgba(59, 130, 246, 0.14), transparent 55%),
+    radial-gradient(800px 450px at 85% 0%, rgba(139, 92, 246, 0.10), transparent 52%),
+    linear-gradient(180deg, var(--tf-bg-0) 0%, var(--tf-bg-1) 100%);
+
+  color: var(--tf-text-0);
+  font: var(--mat-sys-body-medium);
 }
 
 a {
   cursor: pointer;
 }
+
+/* ------------------------------ */
+/* Bootstrap component re-skinning */
+/* ------------------------------ */
+
+/* Typography helpers */
+.text-muted {
+  color: var(--tf-text-2) !important;
+}
+
+/* Surfaces */
+.card {
+  background-color: color-mix(in srgb, var(--tf-surface-2) 92%, transparent);
+  border-color: var(--tf-border);
+  border-radius: var(--tf-radius-lg);
+  box-shadow: var(--tf-shadow-1);
+}
+
+.card-header {
+  background-color: color-mix(in srgb, var(--tf-bg-1) 35%, transparent);
+  border-bottom-color: var(--tf-border);
+}
+
+.card-footer {
+  background-color: transparent;
+  border-top-color: var(--tf-border);
+}
+
+/* Lists / Kanban cards */
+.list-group-item {
+  background-color: color-mix(in srgb, var(--tf-surface-2) 78%, transparent);
+  border-color: var(--tf-border);
+  color: var(--tf-text-0);
+  border-radius: var(--tf-radius-md);
+}
+
+.list-group-item + .list-group-item {
+  margin-top: 0.5rem;
+}
+
+.list-group-item-action:hover {
+  background-color: color-mix(in srgb, var(--tf-primary-500) 10%, var(--tf-surface-2));
+}
+
+.list-group-item-action:focus {
+  box-shadow: var(--tf-glow-primary);
+  outline: none;
+}
+
+/* Buttons */
+.btn {
+  border-radius: var(--tf-radius-md);
+}
+
+.btn-primary {
+  background-color: var(--tf-primary-500);
+  border-color: rgba(96, 165, 250, 0.35);
+}
+
+.btn-primary:hover {
+  background-color: var(--tf-primary-400);
+  border-color: rgba(96, 165, 250, 0.55);
+}
+
+.btn-outline-secondary {
+  color: var(--tf-text-1);
+  border-color: var(--tf-border-strong);
+}
+
+.btn-outline-secondary:hover {
+  background-color: color-mix(in srgb, var(--tf-surface-1) 70%, transparent);
+  border-color: rgba(96, 165, 250, 0.35);
+  color: var(--tf-text-0);
+}
+
+.btn:focus,
+.btn:focus-visible {
+  box-shadow: var(--tf-glow-primary);
+}
+
+/* Forms */
+.form-control,
+.form-select,
+.input-group-text {
+  background-color: color-mix(in srgb, var(--tf-surface-2) 85%, transparent);
+  border-color: var(--tf-border);
+  color: var(--tf-text-0);
+  border-radius: var(--tf-radius-md);
+}
+
+.form-control::placeholder {
+  color: var(--tf-text-3);
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: rgba(96, 165, 250, 0.65);
+  box-shadow: var(--tf-glow-primary);
+}
+
+/* Navbar / sidebar / layout */
+.navbar {
+  background-color: color-mix(in srgb, var(--tf-bg-1) 70%, var(--tf-surface-1)) !important;
+  border-bottom-color: var(--tf-border) !important;
+}
+
+.navbar .navbar-brand {
+  letter-spacing: -0.01em;
+}
+
+.nav-pills .nav-link {
+  border-radius: var(--tf-radius-md);
+  color: var(--tf-text-1);
+}
+
+.nav-pills .nav-link:hover {
+  background-color: color-mix(in srgb, var(--tf-primary-500) 10%, transparent);
+  color: var(--tf-text-0);
+}
+
+.nav-pills .nav-link.active {
+  background-color: color-mix(in srgb, var(--tf-primary-500) 22%, var(--tf-surface-2));
+  color: var(--tf-text-0);
+  box-shadow: var(--tf-glow-primary);
+}
+
+/* Sidebar wrapper */
+.tf-sidebar {
+  background-color: color-mix(in srgb, var(--tf-bg-1) 48%, var(--tf-surface-2));
+}
+
+/* Toasts */
+.toast {
+  background-color: color-mix(in srgb, var(--tf-surface-2) 85%, transparent);
+  border-color: var(--tf-border);
+  border-radius: var(--tf-radius-lg);
+  box-shadow: var(--tf-shadow-2);
+  color: var(--tf-text-0);
+}
+
+.toast-header {
+  border-bottom-color: rgba(255, 255, 255, 0.06);
+}
+
+/* Badge system: keep Bootstrap API but remap to our accents */
+.badge {
+  border-radius: 999px;
+  padding: 0.35em 0.55em;
+  letter-spacing: 0.02em;
+}
+
+.text-bg-primary {
+  background-color: color-mix(in srgb, var(--tf-primary-500) 22%, var(--tf-surface-2)) !important;
+  color: var(--tf-primary-400) !important;
+  border: 1px solid rgba(96, 165, 250, 0.35);
+}
+
+.text-bg-secondary {
+  background-color: color-mix(in srgb, var(--tf-purple-500) 18%, var(--tf-surface-2)) !important;
+  color: color-mix(in srgb, var(--tf-purple-500) 85%, white) !important;
+  border: 1px solid rgba(167, 139, 250, 0.28);
+}
+
+.text-bg-info {
+  background-color: color-mix(in srgb, var(--tf-teal-500) 18%, var(--tf-surface-2)) !important;
+  color: color-mix(in srgb, var(--tf-teal-500) 82%, white) !important;
+  border: 1px solid rgba(45, 212, 191, 0.22);
+}
+
+.text-bg-success {
+  background-color: color-mix(in srgb, var(--tf-success-500) 18%, var(--tf-surface-2)) !important;
+  color: color-mix(in srgb, var(--tf-success-500) 85%, white) !important;
+  border: 1px solid rgba(34, 197, 94, 0.22);
+}
+
+.text-bg-warning {
+  background-color: color-mix(in srgb, var(--tf-warning-500) 20%, var(--tf-surface-2)) !important;
+  color: color-mix(in srgb, var(--tf-warning-500) 88%, white) !important;
+  border: 1px solid rgba(245, 158, 11, 0.25);
+}
+
+.text-bg-danger {
+  background-color: color-mix(in srgb, var(--tf-danger-500) 18%, var(--tf-surface-2)) !important;
+  color: color-mix(in srgb, var(--tf-danger-500) 85%, white) !important;
+  border: 1px solid rgba(239, 68, 68, 0.25);
+}
+
+.text-bg-dark {
+  background-color: color-mix(in srgb, var(--tf-text-3) 25%, var(--tf-surface-2)) !important;
+  color: var(--tf-text-1) !important;
+  border: 1px solid var(--tf-border);
+}
+
+/* “Light” badges are too bright for dark mode; restyle them */
+.text-bg-light {
+  background-color: rgba(148, 163, 184, 0.14) !important;
+  color: var(--tf-text-1) !important;
+  border: 1px solid rgba(148, 163, 184, 0.18);
+}
+
+/* Subtle borders everywhere */
+.border,
+.border-top,
+.border-bottom,
+.border-start,
+.border-end {
+  border-color: var(--tf-border) !important;
+}
+
+/* Scrollbars (Chromium) */
+*::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+*::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.18);
+  border-radius: 999px;
+  border: 3px solid rgba(17, 24, 39, 0.65);
+}
+*::-webkit-scrollbar-thumb:hover {
+  background: rgba(96, 165, 250, 0.25);
+}
+
 /* You can add global styles to this file, and also import other style files */

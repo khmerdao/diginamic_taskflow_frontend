@@ -1,18 +1,21 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TaskDetail } from './task-detail';
+import { provideRouter } from '@angular/router';
 
-describe('TaskDetail', () => {
-  let component: TaskDetail;
-  let fixture: ComponentFixture<TaskDetail>;
+import { TaskDetailComponent } from './task-detail';
+
+describe('TaskDetailComponent', () => {
+  let component: TaskDetailComponent;
+  let fixture: ComponentFixture<TaskDetailComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [TaskDetail]
+      imports: [TaskDetailComponent],
+      providers: [provideRouter([])],
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(TaskDetail);
+    fixture = TestBed.createComponent(TaskDetailComponent);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });

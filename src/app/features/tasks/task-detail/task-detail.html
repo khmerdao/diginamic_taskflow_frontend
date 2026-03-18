@@ -10,7 +10,7 @@
     <a class="btn btn-outline-secondary" routerLink="/tasks">Retour</a>
     @if (task()) {
       <a class="btn btn-primary" [routerLink]="['/tasks', task()?.id, 'edit']">Éditer</a>
-      <button class="btn btn-outline-danger" type="button" (click)="deleteTask()" [disabled]="deleting">
+      <button class="btn btn-outline-danger" type="button" (click)="deleteTask()" [disabled]="deleting()">
         @if (deleting()) {
           <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
         }

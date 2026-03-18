@@ -4,6 +4,33 @@
   overflow: auto;
 }
 
+/* Kanban visual identity (dark SaaS) */
+:host {
+  display: block;
+}
+
+:host ::ng-deep .kanban-column .list-group {
+  padding: 0.25rem;
+}
+
+/* Column header hierarchy */
+:host ::ng-deep .card-header {
+  border-top-left-radius: var(--tf-radius-lg);
+  border-top-right-radius: var(--tf-radius-lg);
+}
+
+/* Task card “chip” feel */
+:host ::ng-deep .list-group-item {
+  border-radius: var(--tf-radius-md) !important;
+  box-shadow: 0 1px 0 rgba(2, 6, 23, 0.35);
+  transition: transform 120ms ease, box-shadow 160ms ease, background-color 160ms ease;
+}
+
+:host ::ng-deep .list-group-item:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 1px 0 rgba(2, 6, 23, 0.35), 0 12px 30px rgba(2, 6, 23, 0.45);
+}
+
 /* La dropzone doit toujours avoir une hauteur cliquable, même sans tâches */
 :host ::ng-deep .cdk-drop-list {
   min-height: 200px;
@@ -11,8 +38,9 @@
 
 /* Feedback visuel pendant le drag */
 :host ::ng-deep .cdk-drag-preview {
-  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
-  border-radius: 0.5rem;
+  box-shadow: var(--tf-shadow-2), var(--tf-glow-primary);
+  border-radius: var(--tf-radius-lg);
+  border: 1px solid rgba(96, 165, 250, 0.35);
 }
 
 :host ::ng-deep .cdk-drop-list-dragging .cdk-drag {
@@ -21,4 +49,11 @@
 
 :host ::ng-deep .cdk-drag-placeholder {
   opacity: 0.3;
+}
+
+/* Drop-zone highlight while dragging */
+:host ::ng-deep .cdk-drop-list.cdk-drop-list-dragging {
+  outline: 1px solid rgba(96, 165, 250, 0.25);
+  border-radius: var(--tf-radius-md);
+  background: color-mix(in srgb, var(--tf-primary-500) 6%, transparent);
 }
